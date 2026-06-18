@@ -10,11 +10,7 @@
     "seed": "node seed.js"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@google/generative-ai": "^0.24.1",
-=======
     "@google/genai": "^2.8.0",
->>>>>>> friend/main
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
