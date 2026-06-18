@@ -32,6 +32,7 @@ const ChatWindow = () => {
 
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
+
   const [typingUsers, setTypingUsers] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
@@ -50,18 +51,14 @@ const ChatWindow = () => {
     if (!socket) return;
 
     const handleNewMessage = (message) => {
-      if (message.conversation === activeConversation?._id) {
-        addMessage(message);
-      }
+      if (message.conversation === activeConversation?._id) addMessage(message);
     };
 
     const handleTyping = ({ userId, username, conversationId }) => {
-      if (conversationId !== activeConversation?._id) return;
-      if (userId === user?._id) return;
-      setTypingUsers((prev) => {
-        if (prev.some((t) => t.userId === userId)) return prev;
-        return [...prev, { userId, username }];
-      });
+      if (conversationId !== activeConversation?._id || userId === user?._id) return;
+      setTypingUsers((prev) =>
+        prev.some((t) => t.userId === userId) ? prev : [...prev, { userId, username }]
+      );
     };
 
     const handleStopTyping = ({ userId }) => {
@@ -134,13 +131,13 @@ const ChatWindow = () => {
 
   if (!activeConversation) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center telegram-shell text-[#6f8597]">
-        <div className="w-20 h-20 rounded-3xl bg-[#17212b] flex items-center justify-center mb-4 border border-[#273746]">
-          <Hash size={34} className="text-[#49b8ff]/70" />
+      <div className="flex-1 flex flex-col items-center justify-center tg-chat-shell text-[#7c95aa]">
+        <div className="w-20 h-20 rounded-3xl bg-[#1a2733] border border-[#2a3c4a] flex items-center justify-center mb-4">
+          <Hash size={34} className="text-[#62c8ff]/80" />
         </div>
-        <h2 className="text-xl font-semibold text-[#d8e8f4] mb-2">Welcome to SyncTalk</h2>
-        <p className="text-sm text-[#7e95a7] max-w-sm text-center">
-          Select a conversation to start messaging with your team in a Telegram-style workspace.
+        <h2 className="text-xl font-semibold text-[#dcedfa] mb-2">Welcome to SyncTalk</h2>
+        <p className="text-sm text-[#84a0b3] max-w-sm text-center">
+          Pick a conversation to start messaging in Telegram-style view.
         </p>
       </div>
     );
@@ -153,18 +150,19 @@ const ChatWindow = () => {
   const chatName = isGroup ? activeConversation.name : otherUser?.username || 'Unknown';
 
   return (
-    <div className="flex-1 flex flex-col telegram-shell relative">
-      <div className="flex items-center justify-between px-4 md:px-6 py-3 telegram-header">
+    <div className="flex-1 flex flex-col tg-chat-shell relative">
+      {/* Header */}
+      <div className="tg-chat-header flex items-center justify-between px-4 md:px-6 py-3">
         <div className="flex items-center gap-3 min-w-0">
           <button
             onClick={() => navigate('/dashboard')}
-            className="lg:hidden p-1.5 rounded-lg hover:bg-[#243342] text-[#9ab0c1]"
+            className="lg:hidden p-1.5 rounded-lg hover:bg-[#263848] text-[#9ab0c1]"
           >
             <ChevronLeft size={20} />
           </button>
 
           {isGroup ? (
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#39b9ff] to-[#1f9af5] flex items-center justify-center text-white font-semibold shadow-lg shadow-sky-500/20">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#40beff] to-[#219cf6] flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
               <Hash size={18} />
             </div>
           ) : (
@@ -177,7 +175,7 @@ const ChatWindow = () => {
           )}
 
           <div className="min-w-0">
-            <h2 className="font-semibold text-[#eaf4fc] text-sm truncate">{chatName}</h2>
+            <h2 className="font-semibold text-[#e8f3fb] text-sm truncate">{chatName}</h2>
             <p className="text-xs text-[#8fa5b6]">
               {isGroup
                 ? `${activeConversation.participants?.length} members`
@@ -191,7 +189,11 @@ const ChatWindow = () => {
         <div className="flex items-center gap-1">
           <button
             onClick={() => setShowSearch(!showSearch)}
-            className={`p-2 rounded-lg transition-colors ${showSearch ? 'bg-[#2a9ceb]/25 text-[#63c6ff]' : 'text-[#90a6b8] hover:bg-[#243342] hover:text-[#d9e8f3]'}`}
+            className={`p-2 rounded-lg transition-colors ${
+              showSearch
+                ? 'bg-[#2a9ceb]/25 text-[#63c6ff]'
+                : 'text-[#90a6b8] hover:bg-[#263848] hover:text-[#d9e8f3]'
+            }`}
             title="Search messages"
           >
             <Search size={18} />
@@ -201,14 +203,22 @@ const ChatWindow = () => {
             <>
               <button
                 onClick={() => setShowSummary(!showSummary)}
-                className={`p-2 rounded-lg transition-colors ${showSummary ? 'bg-[#2a9ceb]/25 text-[#63c6ff]' : 'text-[#90a6b8] hover:bg-[#243342] hover:text-[#d9e8f3]'}`}
+                className={`p-2 rounded-lg transition-colors ${
+                  showSummary
+                    ? 'bg-[#2a9ceb]/25 text-[#63c6ff]'
+                    : 'text-[#90a6b8] hover:bg-[#263848] hover:text-[#d9e8f3]'
+                }`}
                 title="AI Summary"
               >
                 <Sparkles size={18} />
               </button>
               <button
                 onClick={() => setShowMembers(!showMembers)}
-                className={`p-2 rounded-lg transition-colors ${showMembers ? 'bg-[#2a9ceb]/25 text-[#63c6ff]' : 'text-[#90a6b8] hover:bg-[#243342] hover:text-[#d9e8f3]'}`}
+                className={`p-2 rounded-lg transition-colors ${
+                  showMembers
+                    ? 'bg-[#2a9ceb]/25 text-[#63c6ff]'
+                    : 'text-[#90a6b8] hover:bg-[#263848] hover:text-[#d9e8f3]'
+                }`}
                 title="Members"
               >
                 <Users size={18} />
@@ -219,7 +229,8 @@ const ChatWindow = () => {
       </div>
 
       <div className="flex-1 flex overflow-hidden">
-        <div className="flex-1 flex flex-col">
+        {/* Main chat area */}
+        <div className="flex-1 flex flex-col min-w-0">
           {showSearch && (
             <SearchMessages
               conversationId={activeConversation._id}
@@ -227,12 +238,7 @@ const ChatWindow = () => {
             />
           )}
 
-          <div
-            ref={messagesContainerRef}
-            onScroll={handleScroll}
-            className="flex-1 overflow-y-auto px-3 md:px-6 py-4 space-y-1"
-            style={{ background: 'linear-gradient(180deg, #0f1823 0%, #0b141a 100%)' }}
-          >
+          <div ref={messagesContainerRef} onScroll={handleScroll} className="tg-messages-area">
             {loadingMessages ? (
               <Loader text="Loading messages..." />
             ) : messages.length === 0 ? (
@@ -262,11 +268,12 @@ const ChatWindow = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="border-t border-[#243240] bg-[#17212b]">
+          <div className="tg-input-wrap">
             <MessageInput />
           </div>
         </div>
 
+        {/* Summary panel */}
         {showSummary && isGroup && (
           <SummaryPanel
             conversationId={activeConversation._id}
@@ -274,6 +281,7 @@ const ChatWindow = () => {
           />
         )}
 
+        {/* Members panel */}
         {showMembers && isGroup && (
           <div className="w-72 border-l border-[#243240] bg-[#17212b] overflow-y-auto">
             <div className="p-4 border-b border-[#243240] flex items-center justify-between">
@@ -309,15 +317,14 @@ const ChatWindow = () => {
                     </p>
                     <p className="text-[11px] text-[#7f95a7] truncate">{member.status}</p>
                   </div>
-                  {activeConversation.createdBy === user?._id &&
-                    member._id !== user?._id && (
-                      <button
-                        onClick={() => handleRemoveMember(member._id)}
-                        className="text-xs text-[#8da3b5] hover:text-red-400 transition-colors"
-                      >
-                        Remove
-                      </button>
-                    )}
+                  {activeConversation.createdBy === user?._id && member._id !== user?._id && (
+                    <button
+                      onClick={() => handleRemoveMember(member._id)}
+                      className="text-xs text-[#8da3b5] hover:text-red-400 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -325,11 +332,8 @@ const ChatWindow = () => {
         )}
       </div>
 
-      <Modal
-        isOpen={showAddMember}
-        onClose={() => setShowAddMember(false)}
-        title="Add Member"
-      >
+      {/* Add member modal */}
+      <Modal isOpen={showAddMember} onClose={() => setShowAddMember(false)} title="Add Member">
         <div className="space-y-3">
           <input
             type="text"
