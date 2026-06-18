@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         primary: {
+<<<<<<< HEAD
           50: '#eef2ff',
           100: '#e0e7ff',
           200: '#c7d2fe',
@@ -33,6 +34,36 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+=======
+          50: '#f0fdfa',
+          100: '#ccfbf1',
+          200: '#99f6e4',
+          300: '#5eead4',
+          400: '#2dd4bf',
+          500: '#14b8a6', // Electric Teal
+          600: '#0d9488',
+          700: '#0f766e',
+          800: '#115e59',
+          900: '#134e4a',
+          950: '#042f2e',
+        },
+        dark: {
+          50: '#f6f6f7',
+          100: '#e0e1e6',
+          200: '#c0c2cc',
+          300: '#9a9cae',
+          400: '#757891',
+          500: '#5a5d76',
+          600: '#464960',
+          700: '#383a4c',
+          800: '#232533', // Deep slate
+          900: '#12141d', // Very dark background
+          950: '#090a0f', // Almost black
+        },
+      },
+      fontFamily: {
+        sans: ['Outfit', 'system-ui', '-apple-system', 'sans-serif'],
+>>>>>>> friend/main
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',

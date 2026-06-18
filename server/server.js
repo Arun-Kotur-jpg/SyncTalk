@@ -19,6 +19,7 @@ if (!fs.existsSync(voiceDir)) {
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
+<<<<<<< HEAD
   // Connect to MongoDB
   await connectDB();
 
@@ -26,6 +27,12 @@ const startServer = async () => {
   const httpServer = createServer(app);
 
   // Setup Socket.IO
+=======
+  await connectDB();
+
+  const httpServer = createServer(app);
+
+>>>>>>> friend/main
   const io = new Server(httpServer, {
     cors: {
       origin: process.env.CLIENT_URL || 'http://localhost:5173',
@@ -37,7 +44,10 @@ const startServer = async () => {
 
   setupSocket(io);
 
+<<<<<<< HEAD
   // Make io available to routes if needed
+=======
+>>>>>>> friend/main
   app.set('io', io);
 
   httpServer.listen(PORT, () => {
