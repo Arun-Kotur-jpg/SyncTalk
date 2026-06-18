@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { GoogleGenerativeAI } from '@google/generative-ai';
-=======
 import { GoogleGenAI } from '@google/genai';
->>>>>>> friend/main
 import fs from 'fs';
 
 const GEMINI_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
@@ -11,11 +7,7 @@ const getClient = () => {
   if (!process.env.GEMINI_API_KEY) {
     return null;
   }
-<<<<<<< HEAD
-  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-=======
   return new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
->>>>>>> friend/main
 };
 
 /**
@@ -27,15 +19,9 @@ const getClient = () => {
  * @returns {Promise<string>} Transcribed text
  */
 export const transcribeAudio = async (filePath) => {
-<<<<<<< HEAD
-  const genAI = getClient();
-
-  if (!genAI) {
-=======
   const ai = getClient();
 
   if (!ai) {
->>>>>>> friend/main
     // Fallback: return a placeholder when no API key
     return '[Transcription unavailable — configure GEMINI_API_KEY for voice-to-text]';
   }
@@ -48,21 +34,6 @@ export const transcribeAudio = async (filePath) => {
   for (const modelName of GEMINI_MODELS) {
     try {
       console.log(`Trying transcription with model: ${modelName}`);
-<<<<<<< HEAD
-      const model = genAI.getGenerativeModel({ model: modelName });
-
-      const result = await model.generateContent([
-        {
-          inlineData: {
-            mimeType: "audio/webm", // Multer saves voice uploads as webm
-            data: audioBase64
-          }
-        },
-        { text: "Please transcribe this audio exactly as it is spoken. Do not add any extra text, markdown, or comments." },
-      ]);
-
-      const transcription = result.response.text().trim();
-=======
       const response = await ai.models.generateContent({
         model: modelName,
         contents: [
@@ -77,7 +48,6 @@ export const transcribeAudio = async (filePath) => {
       });
 
       const transcription = response.text?.trim();
->>>>>>> friend/main
       if (transcription) {
         console.log(`Transcription succeeded with model: ${modelName}`);
         return transcription;

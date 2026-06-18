@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { GoogleGenerativeAI } from '@google/generative-ai';
-=======
 import { GoogleGenAI } from '@google/genai';
->>>>>>> friend/main
 
 const GEMINI_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
 
@@ -10,11 +6,7 @@ const getClient = () => {
   if (!process.env.GEMINI_API_KEY) {
     return null;
   }
-<<<<<<< HEAD
-  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-=======
   return new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
->>>>>>> friend/main
 };
 
 /**
@@ -27,22 +19,14 @@ const getClient = () => {
  * @returns {Promise<string[]>} Array of bullet point strings
  */
 export const summarizeMessages = async (messages) => {
-<<<<<<< HEAD
-  const genAI = getClient();
-=======
   const ai = getClient();
->>>>>>> friend/main
 
   // Format conversation for the prompt
   const conversation = messages
     .map((m) => `[${m.sender}]: ${m.content}`)
     .join('\n');
 
-<<<<<<< HEAD
-  if (!genAI) {
-=======
   if (!ai) {
->>>>>>> friend/main
     console.warn('No GEMINI_API_KEY configured, using fallback summarizer');
     return fallbackSummary(messages);
   }
@@ -62,17 +46,11 @@ ${conversation}`;
   for (const modelName of GEMINI_MODELS) {
     try {
       console.log(`Trying summarization with model: ${modelName}`);
-<<<<<<< HEAD
-      const model = genAI.getGenerativeModel({ model: modelName });
-      const result = await model.generateContent(prompt);
-      const text = result.response.text().trim();
-=======
       const response = await ai.models.generateContent({
         model: modelName,
         contents: prompt
       });
       const text = response.text.trim();
->>>>>>> friend/main
 
       const bullets = text
         .split('\n')
