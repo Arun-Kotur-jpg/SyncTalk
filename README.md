@@ -1,4 +1,4 @@
-# SyncTalk 🚀
+# SyncTalk 
 
 Hey! Welcome to SyncTalk. I built this project to solve a problem my team was having with keeping track of scattered conversations. It's a real-time team chat application with a twist: it uses AI to automatically summarize long discussions and transcribe voice notes so you don't have to listen to a 5-minute ramble.
 
