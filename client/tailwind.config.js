@@ -5,18 +5,17 @@ export default {
     extend: {
       colors: {
         primary: {
-<<<<<<< HEAD
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
-          950: '#1e1b4b',
+          50: '#e9f7ff',
+          100: '#cbeeff',
+          200: '#9edfff',
+          300: '#6ccdfc',
+          400: '#38b7f4',
+          500: '#229ed9',
+          600: '#1d8bc0',
+          700: '#1976a5',
+          800: '#166287',
+          900: '#144f6d',
+          950: '#0e3346',
         },
         dark: {
           50: '#f8fafc',
@@ -34,36 +33,6 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-=======
-          50: '#f0fdfa',
-          100: '#ccfbf1',
-          200: '#99f6e4',
-          300: '#5eead4',
-          400: '#2dd4bf',
-          500: '#14b8a6', // Electric Teal
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
-          950: '#042f2e',
-        },
-        dark: {
-          50: '#f6f6f7',
-          100: '#e0e1e6',
-          200: '#c0c2cc',
-          300: '#9a9cae',
-          400: '#757891',
-          500: '#5a5d76',
-          600: '#464960',
-          700: '#383a4c',
-          800: '#232533', // Deep slate
-          900: '#12141d', // Very dark background
-          950: '#090a0f', // Almost black
-        },
-      },
-      fontFamily: {
-        sans: ['Outfit', 'system-ui', '-apple-system', 'sans-serif'],
->>>>>>> friend/main
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',
