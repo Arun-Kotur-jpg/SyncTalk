@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, AlertCircle } from 'lucide-react';
 import { API_URL } from '../../utils/constants';
 
 const VoicePlayer = ({ src }) => {
@@ -7,6 +7,7 @@ const VoicePlayer = ({ src }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [error, setError] = useState(false);
 
   // Strip /api from API_URL to get base host for static files
   const baseUrl = API_URL.replace('/api', '');
@@ -16,31 +17,57 @@ const VoicePlayer = ({ src }) => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const setAudioData = () => setDuration(audio.duration);
+    const setAudioData = () => {
+      if (isFinite(audio.duration) && audio.duration > 0) {
+        setDuration(audio.duration);
+      }
+    };
     const setAudioTime = () => setCurrentTime(audio.currentTime);
     const onEnded = () => setIsPlaying(false);
+    const onError = (e) => {
+      console.error('Audio playback error:', e);
+      setError(true);
+    };
+    // Some browsers fire durationchange before loadedmetadata for webm
+    const onDurationChange = () => {
+      if (isFinite(audio.duration) && audio.duration > 0) {
+        setDuration(audio.duration);
+      }
+    };
 
     audio.addEventListener('loadedmetadata', setAudioData);
+    audio.addEventListener('durationchange', onDurationChange);
     audio.addEventListener('timeupdate', setAudioTime);
     audio.addEventListener('ended', onEnded);
+    audio.addEventListener('error', onError);
 
     return () => {
       audio.removeEventListener('loadedmetadata', setAudioData);
+      audio.removeEventListener('durationchange', onDurationChange);
       audio.removeEventListener('timeupdate', setAudioTime);
       audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('error', onError);
     };
   }, []);
 
   const togglePlayPause = () => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || error) return;
 
     if (isPlaying) {
       audio.pause();
+      setIsPlaying(false);
     } else {
-      audio.play();
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch((err) => {
+            console.error('Play failed:', err);
+            setError(true);
+          });
+      }
     }
-    setIsPlaying(!isPlaying);
   };
 
   const handleSeek = (e) => {
@@ -52,7 +79,7 @@ const VoicePlayer = ({ src }) => {
   };
 
   const formatTime = (time) => {
-    if (isNaN(time)) return '0:00';
+    if (isNaN(time) || !isFinite(time)) return '0:00';
     const mins = Math.floor(time / 60);
     const secs = Math.floor(time % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -60,9 +87,18 @@ const VoicePlayer = ({ src }) => {
 
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
+  if (error) {
+    return (
+      <div className="flex items-center gap-2 bg-dark-900/50 rounded-xl px-3 py-2 min-w-[200px]">
+        <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
+        <span className="text-xs text-red-400">Audio unavailable</span>
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-center gap-3 bg-dark-900/50 rounded-xl px-3 py-2 min-w-[200px]">
-      <audio ref={audioRef} src={fullSrc} preload="metadata" />
+      <audio ref={audioRef} src={fullSrc} preload="auto" crossOrigin="anonymous" />
       
       <button
         onClick={togglePlayPause}
@@ -82,6 +118,7 @@ const VoicePlayer = ({ src }) => {
             type="range"
             min={0}
             max={duration || 100}
+            step={0.01}
             value={currentTime}
             onChange={handleSeek}
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"

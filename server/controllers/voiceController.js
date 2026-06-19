@@ -20,17 +20,23 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
   const allowedTypes = [
     'audio/webm',
+    'audio/webm;codecs=opus',
     'audio/ogg',
+    'audio/ogg;codecs=opus',
     'audio/mp4',
+    'audio/x-m4a',
     'audio/mpeg',
     'audio/wav',
     'audio/x-wav',
     'audio/mp3',
   ];
-  if (allowedTypes.includes(file.mimetype)) {
+  // Also accept if the base type matches (strip codec params for comparison)
+  const baseType = file.mimetype.split(';')[0].trim();
+  if (allowedTypes.includes(file.mimetype) || allowedTypes.includes(baseType)) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid audio file type'), false);
+    console.warn('Rejected audio upload with mimetype:', file.mimetype);
+    cb(new Error(`Invalid audio file type: ${file.mimetype}`), false);
   }
 };
 

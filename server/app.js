@@ -33,8 +33,27 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Static files for voice uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Static files for voice uploads — with correct audio headers
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  setHeaders: (res, filePath) => {
+    // Ensure correct Content-Type for audio files
+    const ext = path.extname(filePath).toLowerCase();
+    const audioMimes = {
+      '.webm': 'audio/webm',
+      '.ogg': 'audio/ogg',
+      '.mp3': 'audio/mpeg',
+      '.mp4': 'audio/mp4',
+      '.m4a': 'audio/mp4',
+      '.wav': 'audio/wav',
+    };
+    if (audioMimes[ext]) {
+      res.setHeader('Content-Type', audioMimes[ext]);
+    }
+    // Allow cross-origin audio playback
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Accept-Ranges', 'bytes');
+  },
+}));
 
 // API Routes
 app.use('/api/auth', authRoutes);

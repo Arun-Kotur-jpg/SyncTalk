@@ -14,8 +14,25 @@ const VoiceRecorder = ({ onSend, onCancel }) => {
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 44100,
+        },
+      });
+
+      // Pick the best supported MIME type for broad playback compatibility
+      const mimeOptions = [
+        'audio/webm;codecs=opus',
+        'audio/webm',
+        'audio/ogg;codecs=opus',
+        'audio/mp4',
+      ];
+      const mimeType = mimeOptions.find((m) => MediaRecorder.isTypeSupported(m)) || '';
+
+      const options = mimeType ? { mimeType } : {};
+      const mediaRecorder = new MediaRecorder(stream, options);
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
 
@@ -26,12 +43,14 @@ const VoiceRecorder = ({ onSend, onCancel }) => {
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+        const recordedType = mediaRecorder.mimeType || 'audio/webm';
+        const blob = new Blob(chunksRef.current, { type: recordedType });
         setAudioBlob(blob);
         stream.getTracks().forEach((track) => track.stop());
       };
 
-      mediaRecorder.start();
+      // Use timeslice of 250ms so data is captured in small chunks reliably
+      mediaRecorder.start(250);
       setRecording(true);
       setRecordingTime(0);
       timerRef.current = setInterval(() => {
