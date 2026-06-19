@@ -4,20 +4,20 @@ import Button from '../components/common/Button';
 
 const Landing = () => {
   return (
-    <div className="min-h-screen bg-dark-950 text-dark-100 flex flex-col font-sans">
-      {/* Nav — clean, flat, no heavy borders */}
+    <div className="min-h-screen flex flex-col font-sans" style={{ backgroundColor: '#FDEBD3', color: '#2d2d2d' }}>
+      {/* Nav */}
       <nav className="flex items-center justify-between px-8 md:px-16 py-5">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 bg-primary-500 rounded-full flex items-center justify-center">
             <span className="font-bold text-white text-lg leading-none">S</span>
           </div>
-          <span className="text-xl font-semibold tracking-tight">SyncTalk</span>
+          <span className="text-xl font-semibold tracking-tight" style={{ color: '#1a1a1a' }}>SyncTalk</span>
         </div>
         <div className="flex items-center gap-6">
-          <a href="#features" className="hidden sm:block text-sm text-dark-400 hover:text-dark-100 transition-colors">
+          <a href="#features" className="hidden sm:block text-sm transition-colors" style={{ color: '#666' }}>
             Features
           </a>
-          <Link to="/login" className="text-sm text-dark-400 hover:text-dark-100 transition-colors">
+          <Link to="/login" className="text-sm transition-colors" style={{ color: '#666' }}>
             Log in
           </Link>
           <Link to="/register">
@@ -26,19 +26,19 @@ const Landing = () => {
         </div>
       </nav>
 
-      {/* Hero — centered, generous spacing, clean */}
+      {/* Hero */}
       <main className="flex-1 flex flex-col items-center justify-center text-center px-6 py-16 md:py-24">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-500/10 mb-8">
-          <Sparkles size={14} className="text-primary-400" />
-          <span className="text-xs font-medium text-primary-300">Now with AI Chat Summaries</span>
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8" style={{ backgroundColor: 'rgba(20,184,166,0.12)' }}>
+          <Sparkles size={14} className="text-primary-600" />
+          <span className="text-xs font-medium text-primary-700">Now with AI Chat Summaries</span>
         </div>
         
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 max-w-2xl leading-tight">
-          Team chat, <br className="hidden md:block" />
-          <span className="text-primary-400">simple and fast.</span>
+        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 max-w-2xl leading-tight" style={{ color: '#1a1a1a' }}>
+          SyncTalk, <br className="hidden md:block" />
+          <span className="text-primary-600">simple and fast.</span>
         </h1>
         
-        <p className="text-base md:text-lg text-dark-400 max-w-lg mb-10 leading-relaxed">
+        <p className="text-base md:text-lg max-w-lg mb-10 leading-relaxed" style={{ color: '#666' }}>
           Real-time messaging with voice notes and AI summaries. Built for software teams who want to communicate without the clutter.
         </p>
         
@@ -49,19 +49,19 @@ const Landing = () => {
               <ArrowRight size={18} />
             </Button>
           </Link>
-          <a href="#features" className="btn-secondary px-6 py-3 w-full sm:w-auto flex items-center justify-center">
+          <a href="#features" className="px-6 py-3 w-full sm:w-auto flex items-center justify-center rounded-xl font-medium text-sm transition-colors" style={{ backgroundColor: 'rgba(0,0,0,0.06)', color: '#444' }}>
             Learn more
           </a>
         </div>
       </main>
 
       {/* Divider */}
-      <div className="w-16 h-px bg-dark-700 mx-auto" />
+      <div className="w-16 h-px mx-auto" style={{ backgroundColor: 'rgba(0,0,0,0.1)' }} />
 
-      {/* Why SyncTalk — Telegram-style grid, single-word bold titles */}
+      {/* Features */}
       <section id="features" className="max-w-4xl mx-auto px-6 py-20 md:py-28">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">Why SyncTalk?</h2>
-        <p className="text-dark-400 text-center mb-16 max-w-md mx-auto">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-4" style={{ color: '#1a1a1a' }}>Why SyncTalk?</h2>
+        <p className="text-center mb-16 max-w-md mx-auto" style={{ color: '#888' }}>
           Everything your team needs to stay in sync — nothing it doesn't.
         </p>
 
@@ -77,12 +77,12 @@ const Landing = () => {
 
       {/* Footer */}
       <footer className="px-8 md:px-16 py-8 mt-auto">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-dark-500">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm" style={{ color: '#999' }}>
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center">
               <span className="font-bold text-white text-xs leading-none">S</span>
             </div>
-            <span className="font-medium text-dark-400">SyncTalk</span>
+            <span className="font-medium" style={{ color: '#777' }}>SyncTalk</span>
           </div>
           <span>Built for teams that ship fast.</span>
         </div>
@@ -93,11 +93,11 @@ const Landing = () => {
 
 const FeatureItem = ({ icon: Icon, title, desc }) => (
   <div className="text-center md:text-left">
-    <div className="w-11 h-11 bg-dark-800 rounded-xl flex items-center justify-center mb-4 mx-auto md:mx-0">
-      <Icon className="text-primary-400" size={20} />
+    <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 mx-auto md:mx-0" style={{ backgroundColor: 'rgba(0,0,0,0.06)' }}>
+      <Icon className="text-primary-600" size={20} />
     </div>
-    <h3 className="text-lg font-bold mb-1.5">{title}</h3>
-    <p className="text-sm text-dark-400 leading-relaxed">{desc}</p>
+    <h3 className="text-lg font-bold mb-1.5" style={{ color: '#1a1a1a' }}>{title}</h3>
+    <p className="text-sm leading-relaxed" style={{ color: '#888' }}>{desc}</p>
   </div>
 );
 
