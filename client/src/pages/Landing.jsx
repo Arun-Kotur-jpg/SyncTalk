@@ -1,20 +1,23 @@
 import { Link } from 'react-router-dom';
-import { Zap, Shield, ArrowRight, Sparkles } from 'lucide-react';
+import { Zap, Shield, ArrowRight, Sparkles, Lock, MessageCircle, Users, Mic, Globe } from 'lucide-react';
 import Button from '../components/common/Button';
 
 const Landing = () => {
   return (
-    <div className="min-h-screen bg-dark-950 text-dark-50 flex flex-col font-sans">
-      {/* Nav */}
-      <nav className="flex items-center justify-between px-8 py-5 border-b border-dark-800">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary-600 rounded-md flex items-center justify-center">
+    <div className="min-h-screen bg-dark-950 text-dark-100 flex flex-col font-sans">
+      {/* Nav — clean, flat, no heavy borders */}
+      <nav className="flex items-center justify-between px-8 md:px-16 py-5">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 bg-primary-500 rounded-full flex items-center justify-center">
             <span className="font-bold text-white text-lg leading-none">S</span>
           </div>
-          <span className="text-xl font-bold">SyncTalk</span>
+          <span className="text-xl font-semibold tracking-tight">SyncTalk</span>
         </div>
-        <div className="flex items-center gap-4">
-          <Link to="/login" className="text-sm text-dark-300 hover:text-white transition-colors">
+        <div className="flex items-center gap-6">
+          <a href="#features" className="hidden sm:block text-sm text-dark-400 hover:text-dark-100 transition-colors">
+            Features
+          </a>
+          <Link to="/login" className="text-sm text-dark-400 hover:text-dark-100 transition-colors">
             Log in
           </Link>
           <Link to="/register">
@@ -23,22 +26,20 @@ const Landing = () => {
         </div>
       </nav>
 
-      {/* Hero */}
-      <main className="flex-1 flex flex-col items-center justify-center text-center px-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-dark-800 border border-dark-700 mb-6">
+      {/* Hero — centered, generous spacing, clean */}
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-6 py-16 md:py-24">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-500/10 mb-8">
           <Sparkles size={14} className="text-primary-400" />
-          <span className="text-xs font-medium text-dark-300">Now with AI Chat Summaries</span>
+          <span className="text-xs font-medium text-primary-300">Now with AI Chat Summaries</span>
         </div>
         
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-5 max-w-3xl">
-          Coordinate your team <br/>
-          <span className="text-primary-400">
-            without the noise.
-          </span>
+        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 max-w-2xl leading-tight">
+          Team chat, <br className="hidden md:block" />
+          <span className="text-primary-400">simple and fast.</span>
         </h1>
         
-        <p className="text-base md:text-lg text-dark-400 max-w-xl mb-8">
-          Secure, real-time communication built for software projects. Context-aware voice messages, instant AI summaries, and zero distractions.
+        <p className="text-base md:text-lg text-dark-400 max-w-lg mb-10 leading-relaxed">
+          Real-time messaging with voice notes and AI summaries. Built for software teams who want to communicate without the clutter.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-3">
@@ -49,41 +50,53 @@ const Landing = () => {
             </Button>
           </Link>
           <a href="#features" className="btn-secondary px-6 py-3 w-full sm:w-auto flex items-center justify-center">
-            View features
+            Learn more
           </a>
         </div>
       </main>
 
-      {/* Features */}
-      <section id="features" className="max-w-5xl mx-auto px-4 py-20">
-        <div className="grid md:grid-cols-3 gap-6">
-          <FeatureCard 
-            icon={Zap}
-            title="Real-time speed"
-            desc="Socket.IO powered instant messaging. Zero latency, instant delivery and read receipts."
-          />
-          <FeatureCard 
-            icon={Sparkles}
-            title="AI Summaries"
-            desc="Catch up in seconds. One click summarizes 100s of messages into actionable bullet points."
-          />
-          <FeatureCard 
-            icon={Shield}
-            title="Secure by design"
-            desc="JWT auth, strict membership checks, and safe media storage. Your team's data is locked down."
-          />
+      {/* Divider */}
+      <div className="w-16 h-px bg-dark-700 mx-auto" />
+
+      {/* Why SyncTalk — Telegram-style grid, single-word bold titles */}
+      <section id="features" className="max-w-4xl mx-auto px-6 py-20 md:py-28">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">Why SyncTalk?</h2>
+        <p className="text-dark-400 text-center mb-16 max-w-md mx-auto">
+          Everything your team needs to stay in sync — nothing it doesn't.
+        </p>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-12 gap-y-14">
+          <FeatureItem icon={Zap} title="Fast" desc="Instant delivery powered by WebSockets. No refresh, no waiting." />
+          <FeatureItem icon={Lock} title="Private" desc="End-to-end secure channels with JWT auth and strict access controls." />
+          <FeatureItem icon={Globe} title="Synced" desc="Messages stay in sync across every device, every time." />
+          <FeatureItem icon={Sparkles} title="Smart" desc="AI summaries turn long threads into quick bullet-point recaps." />
+          <FeatureItem icon={Mic} title="Voice" desc="Context-aware voice messages when typing isn't enough." />
+          <FeatureItem icon={Users} title="Teams" desc="Create groups, manage members, and keep conversations organized." />
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="px-8 md:px-16 py-8 mt-auto">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-dark-500">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center">
+              <span className="font-bold text-white text-xs leading-none">S</span>
+            </div>
+            <span className="font-medium text-dark-400">SyncTalk</span>
+          </div>
+          <span>Built for teams that ship fast.</span>
+        </div>
+      </footer>
     </div>
   );
 };
 
-const FeatureCard = ({ icon: Icon, title, desc }) => (
-  <div className="bg-dark-800 p-6 rounded-xl border border-dark-700 hover:border-dark-600 transition-colors">
-    <div className="w-10 h-10 bg-dark-900 rounded-lg flex items-center justify-center mb-4">
+const FeatureItem = ({ icon: Icon, title, desc }) => (
+  <div className="text-center md:text-left">
+    <div className="w-11 h-11 bg-dark-800 rounded-xl flex items-center justify-center mb-4 mx-auto md:mx-0">
       <Icon className="text-primary-400" size={20} />
     </div>
-    <h3 className="text-lg font-semibold mb-2 text-dark-100">{title}</h3>
+    <h3 className="text-lg font-bold mb-1.5">{title}</h3>
     <p className="text-sm text-dark-400 leading-relaxed">{desc}</p>
   </div>
 );
