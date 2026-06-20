@@ -48,6 +48,12 @@ const messageSchema = new mongoose.Schema(
         ref: 'User',
       },
     ],
+    clearedMentions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
     delivered: {
       type: Boolean,
       default: false,

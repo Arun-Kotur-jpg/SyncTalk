@@ -75,7 +75,10 @@ export const searchMessages = async (req, res) => {
 // GET /api/messages/user/mentions
 export const getMentions = async (req, res) => {
   try {
-    const messages = await Message.find({ mentions: req.user._id })
+    const messages = await Message.find({
+      mentions: req.user._id,
+      clearedMentions: { $ne: req.user._id }
+    })
       .populate('sender', 'username avatar')
       .populate('conversation', 'name type')
       .sort({ createdAt: -1 })
@@ -83,5 +86,26 @@ export const getMentions = async (req, res) => {
     res.json(messages);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch mentions' });
+  }
+};
+
+// @desc    Clear a mention for the current user
+// @route   DELETE /api/messages/:messageId/mentions
+// @access  Private
+export const clearMention = async (req, res) => {
+  try {
+    const message = await Message.findById(req.params.messageId);
+    if (!message) {
+      return res.status(404).json({ message: 'Message not found' });
+    }
+
+    if (!message.clearedMentions.includes(req.user._id)) {
+      message.clearedMentions.push(req.user._id);
+      await message.save();
+    }
+
+    res.json({ message: 'Mention cleared' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to clear mention' });
   }
 };

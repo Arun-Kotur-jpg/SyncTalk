@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { AtSign, MessageSquare, X } from 'lucide-react';
-import { getMentions } from '../../api/messages';
+import { AtSign, MessageSquare, X, Check } from 'lucide-react';
+import { getMentions, clearMention } from '../../api/messages';
 import Avatar from '../common/Avatar';
 import Loader from '../common/Loader';
 import { formatDate } from '../../utils/formatDate';
@@ -29,6 +29,23 @@ const MentionsInbox = ({ onClose }) => {
     fetchMentions();
   }, []);
 
+  const handleDismiss = async (e, message) => {
+    e.stopPropagation(); // Prevent jumping to chat
+    
+    // Clear notification if exists
+    clearNotificationByMessageId(message._id);
+    
+    // Remove it from the local mentions dashboard list so it shrinks
+    setMentions(prev => prev.filter(m => m._id !== message._id));
+    
+    // Tell backend to permanently dismiss it
+    try {
+      await clearMention(message._id);
+    } catch (err) {
+      console.error('Failed to clear mention', err);
+    }
+  };
+
   const handleMentionClick = async (message) => {
     if (!message.conversation) return;
     
@@ -41,6 +58,13 @@ const MentionsInbox = ({ onClose }) => {
     // Remove it from the local mentions dashboard list so it shrinks
     setMentions(prev => prev.filter(m => m._id !== message._id));
     
+    // Tell backend to permanently dismiss it
+    try {
+      await clearMention(message._id);
+    } catch (err) {
+      console.error('Failed to clear mention', err);
+    }
+
     // Select the conversation
     await selectConversation(message.conversation);
     
@@ -73,39 +97,50 @@ const MentionsInbox = ({ onClose }) => {
             </div>
           ) : mentions.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-10 text-dark-500">
-              <AtSign size={40} className="mb-3 opacity-20" />
-              <p className="text-sm">You haven't been mentioned yet.</p>
+              <Check size={40} className="mb-3 opacity-20 text-green-400" />
+              <p className="text-sm">You're all caught up!</p>
             </div>
           ) : (
             <div className="space-y-1">
               {mentions.map((msg) => (
-                <button
+                <div
                   key={msg._id}
-                  onClick={() => handleMentionClick(msg)}
-                  className="w-full text-left p-3 rounded-xl hover:bg-dark-800/60 transition-colors group"
+                  className="w-full flex items-center gap-2 p-1 rounded-xl hover:bg-dark-800/60 transition-colors group"
                 >
-                  <div className="flex items-start gap-3">
-                    <Avatar name={msg.sender?.username} src={msg.sender?.avatar} size="sm" />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-0.5">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-sm font-medium text-dark-200 truncate">
-                            {msg.sender?.username}
-                          </span>
-                          <span className="text-xs text-dark-500 bg-dark-800 px-1.5 py-0.5 rounded-md truncate max-w-[100px]">
-                            {msg.conversation?.name || 'Direct Message'}
+                  <button
+                    onClick={() => handleMentionClick(msg)}
+                    className="flex-1 text-left p-2"
+                  >
+                    <div className="flex items-start gap-3">
+                      <Avatar name={msg.sender?.username} src={msg.sender?.avatar} size="sm" />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-0.5">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm font-medium text-dark-200 truncate">
+                              {msg.sender?.username}
+                            </span>
+                            <span className="text-xs text-dark-500 bg-dark-800 px-1.5 py-0.5 rounded-md truncate max-w-[100px]">
+                              {msg.conversation?.name || 'Direct Message'}
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-dark-500 flex-shrink-0">
+                            {formatDate(msg.createdAt)}
                           </span>
                         </div>
-                        <span className="text-[10px] text-dark-500 flex-shrink-0">
-                          {formatDate(msg.createdAt)}
-                        </span>
+                        <p className="text-sm text-dark-400 truncate group-hover:text-dark-300 transition-colors">
+                          {msg.content || (msg.type === 'voice' ? '🎤 Voice message' : 'Sent an attachment')}
+                        </p>
                       </div>
-                      <p className="text-sm text-dark-400 truncate group-hover:text-dark-300 transition-colors">
-                        {msg.content || (msg.type === 'voice' ? '🎤 Voice message' : 'Sent an attachment')}
-                      </p>
                     </div>
-                  </div>
-                </button>
+                  </button>
+                  <button
+                    onClick={(e) => handleDismiss(e, msg)}
+                    title="Dismiss"
+                    className="p-2 mr-1 text-dark-500 hover:text-red-400 hover:bg-dark-700 rounded-lg opacity-0 group-hover:opacity-100 transition-all focus:opacity-100"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
               ))}
             </div>
           )}
