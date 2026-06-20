@@ -5,7 +5,7 @@ import { formatTime } from '../../utils/formatDate';
 import { transcribeVoice } from '../../api/voice';
 import { FileText, Reply, Check, CheckCheck } from 'lucide-react';
 
-const MessageBubble = ({ message, isOwn, showAvatar, onTranscriptionUpdate }) => {
+const MessageBubble = ({ message, isOwn, showAvatar, onTranscriptionUpdate, isHighlighted }) => {
   const [transcribing, setTranscribing] = useState(false);
   const [transcribeError, setTranscribeError] = useState('');
 
@@ -24,7 +24,7 @@ const MessageBubble = ({ message, isOwn, showAvatar, onTranscriptionUpdate }) =>
 
   if (message?.type === 'system') {
     return (
-      <div className="flex justify-center py-2">
+      <div id={`msg-${message._id}`} className="flex justify-center py-2">
         <span className="text-xs text-dark-500 bg-dark-800/40 px-3 py-1 rounded-full">
           {message.content}
         </span>
@@ -34,7 +34,7 @@ const MessageBubble = ({ message, isOwn, showAvatar, onTranscriptionUpdate }) =>
 
   if (message?.type === 'summary') {
     return (
-      <div className="flex justify-center py-3">
+      <div id={`msg-${message._id}`} className={`flex justify-center py-3 ${isHighlighted ? 'ring-2 ring-primary-500 rounded-xl' : ''}`}>
         <div className="bg-primary-600/10 border border-primary-500/20 rounded-xl px-4 py-3 max-w-md">
           <div className="flex items-center gap-2 mb-2">
             <FileText size={14} className="text-primary-400" />
@@ -48,8 +48,9 @@ const MessageBubble = ({ message, isOwn, showAvatar, onTranscriptionUpdate }) =>
 
   return (
     <div
+      id={`msg-${message._id}`}
       className={`flex gap-2.5 ${isOwn ? 'flex-row-reverse' : ''} ${showAvatar ? 'mt-3' : 'mt-0.5'}
-        animate-fade-in`}
+        animate-fade-in ${isHighlighted ? 'bg-primary-500/10 rounded-xl p-2 -mx-2 ring-1 ring-primary-500/50' : ''}`}
     >
       {/* Avatar */}
       <div className="w-8 flex-shrink-0">

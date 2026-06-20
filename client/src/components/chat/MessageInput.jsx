@@ -99,13 +99,33 @@ const MessageInput = () => {
     }
 
     // Find matching participant IDs
+    const validMentionedUsernames = [];
     const mentions = activeConversation.participants
-      ?.filter((p) => mentionedUsernames.includes(p.username))
+      ?.filter((p) => {
+        if (mentionedUsernames.includes(p.username)) {
+          validMentionedUsernames.push(p.username);
+          return true;
+        }
+        return false;
+      })
       .map((p) => p._id) || [];
+
+    // Strip valid mentions from the text
+    let finalContent = text.trim();
+    validMentionedUsernames.forEach(username => {
+      // Remove @username and optional trailing space
+      const regex = new RegExp(`@${username}\\b\\s?`, 'gi');
+      finalContent = finalContent.replace(regex, '');
+    });
+    finalContent = finalContent.trim();
+
+    // If there's no text left (and it's a text message), we shouldn't send it unless it's just a poke/ping?
+    // Actually, sending an empty message with mentions is fine for a "ping" but let's allow it if there are mentions.
+    if (!finalContent && mentions.length === 0) return;
 
     sendMessage({
       conversationId: activeConversation._id,
-      content: text.trim(),
+      content: finalContent,
       type: 'text',
       mentions,
     });

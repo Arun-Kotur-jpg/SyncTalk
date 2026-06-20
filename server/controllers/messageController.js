@@ -71,3 +71,17 @@ export const searchMessages = async (req, res) => {
     }
   }
 };
+
+// GET /api/messages/user/mentions
+export const getMentions = async (req, res) => {
+  try {
+    const messages = await Message.find({ mentions: req.user._id })
+      .populate('sender', 'username avatar')
+      .populate('conversation', 'name type')
+      .sort({ createdAt: -1 })
+      .limit(50);
+    res.json(messages);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch mentions' });
+  }
+};

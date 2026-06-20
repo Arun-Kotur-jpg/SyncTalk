@@ -88,10 +88,27 @@ const ChatWindow = () => {
     return () => clearTimeout(timer);
   }, [typingUsers]);
 
-  // Auto-scroll to bottom on new messages
+  const { highlightMessageId, setHighlightMessageId } = useChat();
+
+  // Handle Highlight Message Auto-scroll
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (highlightMessageId && messages.length > 0) {
+      const el = document.getElementById(`msg-${highlightMessageId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Clear the highlight after 3 seconds
+        const timer = setTimeout(() => setHighlightMessageId(null), 3000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [highlightMessageId, messages, setHighlightMessageId]);
+
+  // Auto-scroll to bottom on new messages (only if no highlight)
+  useEffect(() => {
+    if (!highlightMessageId) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, highlightMessageId]);
 
   // Scroll-to-top to load more
   const handleScroll = () => {
@@ -239,7 +256,7 @@ const ChatWindow = () => {
           <div
             ref={messagesContainerRef}
             onScroll={handleScroll}
-            className="flex-1 overflow-y-auto px-6 py-4 space-y-1"
+            className="flex-1 overflow-y-auto px-6 py-4 space-y-1 scroll-smooth"
           >
             {loadingMessages ? (
               <Loader text="Loading messages..." />
@@ -262,6 +279,7 @@ const ChatWindow = () => {
                     isOwn={msg.sender?._id === user?._id}
                     showAvatar={showAvatar}
                     onTranscriptionUpdate={updateMessageTranscription}
+                    isHighlighted={msg._id === highlightMessageId}
                   />
                 );
               })

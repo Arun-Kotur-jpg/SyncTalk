@@ -11,6 +11,7 @@ export const ChatProvider = ({ children }) => {
   const [loadingConversations, setLoadingConversations] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [pagination, setPagination] = useState(null);
+  const [highlightMessageId, setHighlightMessageId] = useState(null);
 
   const fetchConversations = useCallback(async () => {
     setLoadingConversations(true);
@@ -94,6 +95,8 @@ export const ChatProvider = ({ children }) => {
         createConversation,
         setConversations,
         updateMessageTranscription,
+        highlightMessageId,
+        setHighlightMessageId,
       }}
     >
       {children}

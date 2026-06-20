@@ -16,6 +16,7 @@ import useChat from '../../hooks/useChat';
 import useSocket from '../../hooks/useSocket';
 import Avatar from '../common/Avatar';
 import Modal from '../common/Modal';
+import MentionsInbox from '../mentions/MentionsInbox';
 import { formatDate } from '../../utils/formatDate';
 import { getUsers } from '../../api/users';
 import { CONVERSATION_TYPES } from '../../utils/constants';
@@ -29,6 +30,7 @@ const Sidebar = () => {
 
   const [showNewChat, setShowNewChat] = useState(false);
   const [showNewGroup, setShowNewGroup] = useState(false);
+  const [showMentions, setShowMentions] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [searching, setSearching] = useState(false);
@@ -150,8 +152,9 @@ const Sidebar = () => {
               </button>
               <div className="relative">
                 <button
+                  onClick={() => setShowMentions(true)}
                   className="p-2 rounded-lg hover:bg-dark-700/60 text-dark-400 hover:text-dark-200 transition-colors"
-                  title="Notifications"
+                  title="Mentions"
                 >
                   <Bell size={18} />
                 </button>
@@ -384,6 +387,10 @@ const Sidebar = () => {
           </button>
         </div>
       </Modal>
+
+      {showMentions && (
+        <MentionsInbox onClose={() => setShowMentions(false)} />
+      )}
     </>
   );
 };
