@@ -10,6 +10,7 @@ import {
   Bell,
   Hash,
   User,
+  AtSign,
 } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
 import useChat from '../../hooks/useChat';
@@ -150,20 +151,6 @@ const Sidebar = () => {
               >
                 <Settings size={18} />
               </button>
-              <div className="relative">
-                <button
-                  onClick={() => setShowMentions(true)}
-                  className="p-2 rounded-lg hover:bg-dark-700/60 text-dark-400 hover:text-dark-200 transition-colors"
-                  title="Mentions"
-                >
-                  <Bell size={18} />
-                </button>
-                {notifications.length > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 rounded-full text-[10px] flex items-center justify-center text-white font-bold">
-                    {notifications.length > 9 ? '9+' : notifications.length}
-                  </span>
-                )}
-              </div>
             </div>
           </div>
 
@@ -179,6 +166,24 @@ const Sidebar = () => {
                 placeholder:text-dark-500 focus:outline-none focus:ring-1 focus:ring-primary-500/50 transition-all"
             />
           </div>
+        </div>
+
+        {/* Mentions & Notifications */}
+        <div className="px-4 py-2 border-b border-dark-700/30">
+          <button
+            onClick={() => setShowMentions(true)}
+            className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg bg-dark-800/40 hover:bg-dark-700/60 transition-colors text-dark-200 border border-dark-700/50"
+          >
+            <div className="flex items-center gap-2.5">
+              <AtSign size={16} className="text-primary-400" />
+              <span className="text-sm font-medium">Mentions Dashboard</span>
+            </div>
+            {notifications.length > 0 && (
+              <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg">
+                {notifications.length > 9 ? '9+' : notifications.length}
+              </span>
+            )}
+          </button>
         </div>
 
         {/* New chat buttons */}
