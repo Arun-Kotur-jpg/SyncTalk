@@ -94,14 +94,14 @@ export const getMentions = async (req, res) => {
 // @access  Private
 export const clearMention = async (req, res) => {
   try {
-    const message = await Message.findById(req.params.messageId);
+    const message = await Message.findByIdAndUpdate(
+      req.params.messageId,
+      { $addToSet: { clearedMentions: req.user._id } },
+      { new: true }
+    );
+
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
-    }
-
-    if (!message.clearedMentions.includes(req.user._id)) {
-      message.clearedMentions.push(req.user._id);
-      await message.save();
     }
 
     res.json({ message: 'Mention cleared' });
