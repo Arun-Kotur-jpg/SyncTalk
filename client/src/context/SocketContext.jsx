@@ -121,6 +121,10 @@ export const SocketProvider = ({ children }) => {
     setNotifications((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
+  const clearNotificationByMessageId = useCallback((messageId) => {
+    setNotifications((prev) => prev.filter((n) => n.messageId !== messageId));
+  }, []);
+
   const isOnline = useCallback(
     (userId) => onlineUsers.includes(userId),
     [onlineUsers]
@@ -139,6 +143,7 @@ export const SocketProvider = ({ children }) => {
         emitStopTyping,
         markRead,
         clearNotification,
+        clearNotificationByMessageId,
         isOnline,
       }}
     >

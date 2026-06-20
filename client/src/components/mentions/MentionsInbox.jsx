@@ -5,12 +5,14 @@ import Avatar from '../common/Avatar';
 import Loader from '../common/Loader';
 import { formatDate } from '../../utils/formatDate';
 import useChat from '../../hooks/useChat';
+import useSocket from '../../hooks/useSocket';
 import { useNavigate } from 'react-router-dom';
 
 const MentionsInbox = ({ onClose }) => {
   const [mentions, setMentions] = useState([]);
   const [loading, setLoading] = useState(true);
   const { selectConversation, setHighlightMessageId } = useChat();
+  const { clearNotificationByMessageId } = useSocket();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,6 +34,9 @@ const MentionsInbox = ({ onClose }) => {
     
     // Set the highlight ID so ChatWindow knows to scroll/glow
     setHighlightMessageId(message._id);
+    
+    // Clear notification if exists
+    clearNotificationByMessageId(message._id);
     
     // Select the conversation
     await selectConversation(message.conversation);
