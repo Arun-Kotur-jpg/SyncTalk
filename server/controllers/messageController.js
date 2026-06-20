@@ -79,7 +79,7 @@ export const getMentions = async (req, res) => {
       .populate('sender', 'username avatar')
       .populate('conversation', 'name type')
       .sort({ createdAt: -1 })
-      .limit(50);
+      .limit(8);
     res.json(messages);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch mentions' });

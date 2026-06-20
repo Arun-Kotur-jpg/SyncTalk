@@ -38,6 +38,9 @@ const MentionsInbox = ({ onClose }) => {
     // Clear notification if exists
     clearNotificationByMessageId(message._id);
     
+    // Remove it from the local mentions dashboard list so it shrinks
+    setMentions(prev => prev.filter(m => m._id !== message._id));
+    
     // Select the conversation
     await selectConversation(message.conversation);
     
